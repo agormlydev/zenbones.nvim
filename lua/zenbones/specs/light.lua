@@ -166,7 +166,9 @@ local function generate(p, opt)
 			-- Structure    { }, --  struct, union, enum, etc.
 			-- Typedef      { }, --  A typedef
 
-			Special         { fg = p.wood }, -- (preferred) any special symbol
+			-- AG Custom
+			-- Special         { fg = p.wood }, -- (preferred) any special symbol
+			Special         { gui = "bold" }, -- (preferred) any special symbol
 			-- SpecialChar  { }, --  special character in a constant
 			-- Tag          { }, --    you can use CTRL-] on this
 			-- Delimiter       { fg = p1.bg.da(42) }, --	character that needs attention
