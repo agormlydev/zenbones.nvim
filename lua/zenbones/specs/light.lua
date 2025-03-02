@@ -142,7 +142,9 @@ local function generate(p, opt)
 			Float           { Constant }, --    a floating point constant: 2.3e10
 
 			Identifier      { fg = p1.fg2 }, -- (preferred) any variable name
-			Function        { fg = p.fg }, -- function name (also: methods for classes)
+			-- AG Custom
+			-- Function        { fg = p.fg }, -- function name (also: methods for classes)
+			Function        { fg = p.fg, gui = "bold" }, -- function name (also: methods for classes)
 			fsharpCoreMethod { fg = p.fg },
 
 			Statement       { fg = p.fg, gui = "bold" }, -- (preferred) any statement
