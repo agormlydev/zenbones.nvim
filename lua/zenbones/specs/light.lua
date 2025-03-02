@@ -38,8 +38,10 @@ local function generate(p, opt)
 			ErrorMsg        { Error }, -- error messages on the command line
 			WarningMsg      { fg = p.wood }, -- warning messages
 
-			Comment         { fg = p1.bg.da(opt.darken_comments or 38).de(28), gui = opt.italic_comments ~= false and "italic" or "NONE" }, -- any comment
-			Conceal         { fg = p1.fg5, gui = "bold,italic" }, -- placeholder characters substituted for concealed text (see 'conceallevel')
+			-- Comment         { fg = p1.bg.da(opt.darken_comments or 38).de(28), gui = opt.italic_comments ~= false and "italic" or "NONE" }, -- any comment
+			-- AG Custom
+			Comment         { fg = p.rose, gui = opt.italic_comments ~= false and "italic" or "NONE" }, -- any comment
+			Conceal         { fg = p1.fg3, gui = "bold,italic" }, -- placeholder characters substituted for concealed text (see 'conceallevel')
 
 			Cursor          { bg = p.fg, fg = p1.bg }, -- character under the cursor
 			lCursor         { Cursor, bg = Cursor.bg.li(20)  }, -- the character under the cursor when |language-mapping| is used (see 'guicursor')
@@ -47,7 +49,9 @@ local function generate(p, opt)
 			TermCursor      { Cursor }, -- cursor in a focused terminal
 			TermCursorNC    { lCursor }, -- cursor in an unfocused terminal
 
-			CursorLine      { bg = p1.bg.da(opt.darken_cursor_line or 3) }, -- Screen-line at the cursor, when 'cursorline' is set.	Low-priority if foreground (ctermfg OR guifg) is not set.
+			-- CursorLine      { bg = p1.bg.da(opt.darken_cursor_line or 3) }, -- Screen-line at the cursor, when 'cursorline' is set.	Low-priority if foreground (ctermfg OR guifg) is not set.
+			-- AG Custom
+			CursorLine      { bg = p.cursorLine }, -- Screen-line at the cursor, when 'cursorline' is set.	Low-priority if foreground (ctermfg OR guifg) is not set.
 			CursorColumn    { CursorLine }, -- Screen-column at the cursor, when 'cursorcolumn' is set.
 			ColorColumn     { bg = p.wood.saturation(46).lightness(p1.bg.l - 12) }, -- used for the columns set with 'colorcolumn'
 
@@ -69,7 +73,7 @@ local function generate(p, opt)
 
 			NormalFloat     { bg = p1.bg.da(8) }, -- Normal text in floating windows.
 			FloatBorder     { fg = p1.bg.da(50), bg = opt.solid_float_border and NormalFloat.bg or "NONE" }, -- Normal text in floating windows.
-			FloatTitle      { fg = p.fg, bg = NormalFloat.bg, gui = "bold" },
+			-- FloatTitle      { },
 			-- FloatFooter     { },
 
 			Pmenu           { bg = p1.bg.da(10) }, -- Popup menu: normal item.
@@ -93,17 +97,20 @@ local function generate(p, opt)
 			SpellLocal      { SpellCap }, -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
 			SpellRare       { SpellBad, sp = p.wood }, -- Word that is recognized by the spellchecker as one that is hardly ever used.  |spell| Combined with the highlighting used otherwise.
 
-			StatusLine      { bg = p1.bg.da(12), fg = p.fg }, -- status line of current window
+			StatusLine      { bg = p.bg, fg = p.sky, gui = "bold" }, -- status line of current window
 			StatusLineNC    { bg = p1.bg.da(6), fg = p.fg.li(28) }, -- status lines of not-current windows Note: if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
 			TabLine         { StatusLine }, -- tab pages line, not active tab page label
 			TabLineFill     { StatusLineNC }, -- tab pages line, where there are no labels
 			TabLineSel      { gui = "bold" }, -- tab pages line, active tab page label
 			WinBar          { StatusLine },
 			WinBarNC        { StatusLineNC },
-			WinSeparator    { fg = LineNr.fg, bg = opt.solid_vert_split and StatusLineNC.bg or "NONE" },
+			-- WinSeparator    { fg = LineNr.fg, bg = opt.solid_vert_split and StatusLineNC.bg or "NONE" },
+			WinSeparator    { fg = p.fg, bg = opt.solid_vert_split and StatusLineNC.bg or "NONE" },
 			VertSplit       { WinSeparator },
 
-			Visual          { bg = p.fg.lightness(p1.bg.l - 8) }, -- Visual mode selection
+			-- Visual          { bg = p.fg.lightness(p1.bg.l - 8) }, -- Visual mode selection
+			-- AG Custom
+			Visual          { bg = p.visual }, -- Visual mode selection
 			-- VisualNOS    { }, -- Visual mode selection when vim is "Not Owning the Selection".
 
 			NonText         { fg = p1.bg.da(opt.darken_non_text or 25) }, -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
@@ -123,15 +130,20 @@ local function generate(p, opt)
 			-- default,
 			-- Uncomment and edit if you want more specific syntax highlighting.
 
-			Constant        { fg = p1.fg4, gui = "italic" }, -- (preferred) any constant
+			-- Constant        { fg = p1.fg4, gui = "italic" }, -- (preferred) any constant
+			-- AG Custom
+			Constant        { fg = p1.fg4 }, -- (preferred) any constant
 			String          { Constant }, --   a string constant: "this is a string"
 			Character       { Constant }, --  a character constant: 'c', '\n'
-			Number          { fg = p1.fg4 }, --   a number constant: 234, 0xff
-			Boolean         { fg = p.fg, gui = "italic" }, --  a boolean constant: TRUE, false
-			Float           { Number }, --    a floating point constant: 2.3e10
+			-- Number          { fg = p.fg, gui = "italic" }, --   a number constant: 234, 0xff
+			-- AG Custom
+			Number          { fg = p.fg }, --   a number constant: 234, 0xff
+			Boolean         { Number }, --  a boolean constant: TRUE, false
+			Float           { Constant }, --    a floating point constant: 2.3e10
 
 			Identifier      { fg = p1.fg2 }, -- (preferred) any variable name
 			Function        { fg = p.fg }, -- function name (also: methods for classes)
+			fsharpCoreMethod { fg = p.fg },
 
 			Statement       { fg = p.fg, gui = "bold" }, -- (preferred) any statement
 			-- Conditional  { }, --  if, then, else, endif, switch, etp.
@@ -147,15 +159,19 @@ local function generate(p, opt)
 			-- Macro        { }, --    same as Define
 			-- PreCondit    { }, --  preprocessor #if, #else, #endif, etp.
 
-			Type            { fg = p1.bg.sa(20).da(60) }, -- (preferred) int, long, char, etp.
+			-- Type            { fg = p1.bg.sa(20).da(60) }, -- (preferred) int, long, char, etp.
+			-- AG Custom
+			Type            { fg = p.fg }, -- (preferred) any statement
 			-- StorageClass { }, -- static, register, volatile, etc.
 			-- Structure    { }, --  struct, union, enum, etc.
 			-- Typedef      { }, --  A typedef
 
-			Special         { fg = p1.fg3, gui = "bold" }, -- (preferred) any special symbol
+			Special         { fg = p.wood }, -- (preferred) any special symbol
 			-- SpecialChar  { }, --  special character in a constant
 			-- Tag          { }, --    you can use CTRL-] on this
-			Delimiter       { fg = p1.bg.da(42) }, --	character that needs attention
+			-- Delimiter       { fg = p1.bg.da(42) }, --	character that needs attention
+			-- AG Custom
+			Delimiter       { fg = p.fg }, --	character that needs attention
 			SpecialComment  { Comment, gui = "NONE" }, -- special things inside a comment
 			-- Debug        { }, --    debugging statements
 
@@ -172,7 +188,8 @@ local function generate(p, opt)
 			LspReferenceRead           { ColorColumn }, -- used for highlighting "read" references
 			LspReferenceWrite          { ColorColumn }, -- used for highlighting "write" references
 			LspCodeLens                { LineNr },
-			LspInlayHint               { fg = p1.bg.sa(10).da(36), bg = p1.bg.da(2) },
+			-- LspInlayHint               { fg = p1.bg.sa(10).da(36), bg = p1.bg.da(2) },
+			LspInlayHint               { fg = p.fg.li(70) },
 
 			DiagnosticError            { Error },
 			DiagnosticWarn             { WarningMsg },
@@ -202,19 +219,18 @@ local function generate(p, opt)
 
 			-- Tree-sitter
 			sym "@variable"                     { Identifier },
-			sym "@variable.builtin"             { Constant },
+			sym "@variable.builtin"             { Number },
 			sym "@variable.parameter"           { sym "@variable" },
 			sym "@variable.member"              { sym "@variable" },
 
-			sym "@constant"                     { Identifier, gui = "bold" },
-			sym "@constant.builtin"             { Constant },
-			sym "@constant.macro"               { Constant },
+			sym "@constant"                     { Identifier },
+			sym "@constant.builtin"             { Number },
+			sym "@constant.macro"               { Number },
 
-			sym "@module"                       { Constant },
+			sym "@module"                       { Number },
 			sym "@module.builtin"               { sym "@module" },
 			sym "@label"                        { Statement },
-
-			sym "@string"                       { String },
+sym "@string"                       { Constant },
 			sym "@string.documentation"         { sym "@string" },
 			sym "@string.regexp"                { Constant },
 			sym "@string.escape"                { Special },
@@ -226,7 +242,7 @@ local function generate(p, opt)
 			sym "@character"                    { Constant },
 			sym "@character.special"            { Special },
 
-			sym "@boolean"                      { Boolean },
+			sym "@boolean"                      { Number },
 			sym "@number"                       { Number },
 			sym "@number.float"                 { sym "@number" },
 
@@ -236,7 +252,8 @@ local function generate(p, opt)
 			sym "@type.qualifier"               { sym "@type" },
 
 			sym "@attribute"                    { PreProc },
-			sym "@property"                     { Identifier },
+			-- sym "@property"                     { Identifier },
+			sym "@property"                     { Type },
 
 			sym "@function"                     { Function },
 			sym "@function.builtin"             { Special },
@@ -252,16 +269,23 @@ local function generate(p, opt)
 			sym "@keyword.coroutine"            { Statement },
 			sym "@keyword.function"             { Statement },
 			sym "@keyword.operator"             { Statement },
-			sym "@keyword.import"               { PreProc },
+			-- sym "@keyword.import"               { PreProc },
+			-- AG Custom
+			sym "@keyword.import"               { Statement },
+			sym "@keyword.storage"              { Type },
 			sym "@keyword.storage"              { Type },
 			sym "@keyword.repeat"               { Statement },
 			sym "@keyword.return"               { Statement },
-			sym "@keyword.debug"                { Special },
+			-- sym "@keyword.debug"                { Special },
+			-- AG Custom
+			sym "@keyword.debug"                { Statement },
 			sym "@keyword.exception"            { Statement },
 
 			sym "@keyword.conditional"          { Statement },
 			sym "@keyword.conditional.ternary"  { sym "@keyword.conditional" },
-			sym "@keyword.directive"            { PreProc },
+			-- sym "@keyword.directive"            { PreProc },
+			-- AG Custom
+			sym "@keyword.directive"            { Statement },
 			sym "@keyword.directive.define"     { sym "@keyword.directive" },
 
 			sym "@punctuation.delimiter"        { Delimiter },
@@ -298,9 +322,9 @@ local function generate(p, opt)
 			sym "@markup.list.checked"          { sym "@markup.list" },
 			sym "@markup.list.unchecked"        { sym "@markup.list" },
 
-			sym "@diff.plus"                    { DiffAdd },
-			sym "@diff.minus"                   { DiffDelete },
-			sym "@diff.delta"                   { DiffChange },
+			sym "@diff.plus"                    { fg = p.leaf },
+			sym "@diff.minus"                   { fg = p.rose },
+			sym "@diff.delta"                   { fg = p.water },
 
 			sym "@tag"                          { Special },
 			sym "@tag.attribute"                { sym "@property" },
@@ -320,8 +344,6 @@ local function generate(p, opt)
 			sym "@markup.raw.block.vimdoc"      { fg = 'NONE' },
 			sym "@variable.parameter.vimdoc"    { Type },
 			sym "@label.vimdoc"                 { Type, gui = "bold" },
-
-			sym "@constructor.lua"                  { Delimiter },
 
 			-- LSP Semantic Token Groups
 			sym "@lsp.type.boolean"                       { sym "@boolean" },
@@ -367,9 +389,9 @@ local function generate(p, opt)
 			sym "@lsp.typemod.variable.static"            { sym "@constant" },
 
 			-- Syntax
-			diffAdded                 { DiffAdd },
-			diffRemoved               { DiffDelete },
-			diffChanged               { DiffChange },
+			diffAdded                 { fg = p.leaf },
+			diffRemoved               { fg = p.rose },
+			diffChanged               { fg = p.water },
 			diffOldFile               { fg = p.rose, gui = "italic" },
 			diffNewFile               { fg = p.leaf, gui = "italic" },
 			diffFile                  { fg = p.wood, gui = "bold" },
@@ -397,12 +419,10 @@ local function generate(p, opt)
 			GitGutterChange                  { GitSignsChange },
 			GitGutterDelete                  { GitSignsDelete },
 
-			IblIndent                        { fg = p1.bg.da(6).de(20) },
-			IblScope                         { fg = p1.bg.da(22).de(20) },
-			IndentLine                       { IblIndent },
-			IndentLineCurrent                { IblScope },
-			SnacksIndent                     { fg = p1.bg.da(6).de(20) },
-			SnacksIndentScope                { fg = p1.bg.da(22).de(20) },
+			-- IblIndent                        { fg = p1.bg.da(6).de(20) },
+			-- AG Custom
+			IblIndent                        { fg = p.indent },
+			IblScope                         { fg = p.indent },
 
 			TelescopeSelection               { CursorLine },
 			TelescopeSelectionCaret          { TelescopeSelection, fg = p.rose },
@@ -420,17 +440,15 @@ local function generate(p, opt)
 			FzfLuaTabTitle                   { fg = p.sky },
 			FzfLuaTabMarker                  { fg = p.leaf },
 			FzfLuaLiveSym                    { fg = p.wood },
-			FzfLuaTitle                      { Title },
-			FzfLuaFzfCursorLine              { CursorLine },
-			FzfLuaFzfMatch                   { fb = p.blossom, gui = "bold" },
 
 			Sneak                            { Search },
 			SneakLabel                       { WildMenu },
 			SneakLabelMask                   { bg = p.blossom, fg = p.blossom },
 
 			LeapMatch                        { gui = "bold,underline,nocombine" },
-			LeapBackdrop                     { gui = "nocombine", fg = p.bg.lightness(p.bg.l - 20) },
-			LeapLabel                        { fg = p.blossom.lightness(p1.bg.l - 46).sa(80), gui = "bold" },
+			LeapLabelPrimary                 { Search , gui = "bold,nocombine" },
+			LeapLabelSecondary               { DiffText, gui = "bold,nocombine" },
+			LeapLabelSelected                { IncSearch },
 
 			HopNextKey                       { fg = p.blossom, gui = "bold,underline" },
 			HopNextKey1                      { fg = p.sky, gui = "bold,underline" },
@@ -495,11 +513,6 @@ local function generate(p, opt)
 			CmpItemKind                      { fg = p1.fg4 },
 			CmpItemMenu                      { fg = p1.fg5 },
 
-			BlinkCmpLabelDetail              { Type },
-			BlinkCmpLabelDescription         { Type },
-			BlinkCmpSource                   { Type },
-			BlinkCmpKind                     { fg = p1.fg4 },
-
 			NnnNormal                        { NvimTreeNormal },
 			NnnNormalNC                      { NnnNormal },
 			NnnWinSeparator                  { NvimTreeWinSeparator },
@@ -538,8 +551,6 @@ local function generate(p, opt)
 			NotifyDEBUGTitle                 { DiagnosticHint },
 			NotifyTRACEIcon                  { DiagnosticHint },
 			NotifyTRACETitle                 { DiagnosticHint },
-
-			RenderMarkdownCode { bg = LspInlayHint.bg },
 		}
 	end)
 	-- stylua: ignore end

@@ -38,7 +38,9 @@ local function generate(p, opt)
 			ErrorMsg        { Error }, -- error messages on the command line
 			WarningMsg      { fg = p.wood }, -- warning messages
 
-			Comment         { fg = p1.bg.li(opt.lighten_comments or 38).de(24), gui = opt.italic_comments ~= false and "italic" or "NONE" }, -- any comment
+			-- Comment         { fg = p1.bg.li(opt.lighten_comments or 38).de(24), gui = opt.italic_comments ~= false and "italic" or "NONE" }, -- any comment
+			-- AG Custom
+			Comment         { fg = p.rose, gui = opt.italic_comments ~= false and "italic" or "NONE" }, -- any comment
 			Conceal         { fg = p1.fg5, gui = "bold,italic" }, -- placeholder characters substituted for concealed text (see 'conceallevel')
 
 			Cursor          { bg = p.fg.li(20), fg = p1.bg }, -- character under the cursor
@@ -69,7 +71,7 @@ local function generate(p, opt)
 
 			NormalFloat     { bg = p1.bg.li(10) }, -- Normal text in floating windows.
 			FloatBorder     { fg = p1.bg.li(46), bg = opt.solid_float_border and NormalFloat.bg or "NONE" }, -- Normal text in floating windows.
-			FloatTitle      { fg = p.fg, bg = NormalFloat.bg, gui = "bold" },
+			-- FloatTitle      { },
 			-- FloatFooter     { },
 
 			Pmenu           { bg = p1.bg.li(10) }, -- Popup menu: normal item.
@@ -123,12 +125,16 @@ local function generate(p, opt)
 			-- default,
 			-- Uncomment and edit if you want more specific syntax highlighting.
 
-			Constant        { fg = p1.fg4, gui = "italic" }, -- (preferred) any constant
+			-- Constant        { fg = p1.fg4, gui = "italic" }, -- (preferred) any constant
+			-- AG Custom
+			Constant        { fg = p.fg.da(12) }, -- (preferred) any constant
 			String          { Constant }, --   a string constant: "this is a string"
 			Character       { Constant }, --  a character constant: 'c', '\n'
-			Number          { fg = p1.fg4 }, --   a number constant: 234, 0xff
-			Boolean         { fg = p.fg, gui = "italic" }, --  a boolean constant: TRUE, false
-			Float           { Number }, --    a floating point constant: 2.3e10
+			-- Number          { fg = p.fg, gui = "italic" }, --   a number constant: 234, 0xff
+			-- AG Custom
+			Number          { fg = p.fg }, --   a number constant: 234, 0xff
+			Boolean         { Number }, --  a boolean constant: TRUE, false
+			Float           { Constant }, --    a floating point constant: 2.3e10
 
 			Identifier      { fg = p1.fg2 }, -- (preferred) any variable name
 			Function        { fg = p.fg }, -- function name (also: methods for classes)
@@ -147,7 +153,9 @@ local function generate(p, opt)
 			-- Macro        { }, --    same as Define
 			-- PreCondit    { }, --  preprocessor #if, #else, #endif, etc.
 
-			Type            { fg = p1.bg.li(58) }, -- (preferred) int, long, char, etc.
+			-- Type            { fg = p1.bg.li(58) }, -- (preferred) int, long, char, etc.
+			-- AG Custom
+			Type            { fg = p.fg }, -- (preferred) int, long, char, etc.
 			-- StorageClass { }, -- static, register, volatile, etc.
 			-- Structure    { }, --  struct, union, enum, etc.
 			-- Typedef      { }, --  A typedef
@@ -200,21 +208,24 @@ local function generate(p, opt)
 			DiagnosticUnderlineHint    { fg = opt.colorize_diagnostic_underline_text and DiagnosticHint.fg or "NONE", gui = "undercurl", sp = DiagnosticHint.fg },
 			DiagnosticUnderlineOk      { fg = opt.colorize_diagnostic_underline_text and DiagnosticOk.fg or "NONE", gui = "undercurl", sp = DiagnosticOk.fg },
 
+			fsharpCore { fg = p.fg, bg = p.bg },
+		
+
 			-- Tree-sitter
 			sym "@variable"                     { Identifier },
-			sym "@variable.builtin"             { Constant },
+			sym "@variable.builtin"             { Number },
 			sym "@variable.parameter"           { sym "@variable" },
 			sym "@variable.member"              { sym "@variable" },
 
 			sym "@constant"                     { Identifier, gui = "bold" },
-			sym "@constant.builtin"             { Constant },
-			sym "@constant.macro"               { Constant },
+			sym "@constant.builtin"             { Number },
+			sym "@constant.macro"               { Number },
 
-			sym "@module"                       { Constant },
+			sym "@module"                       { Number },
 			sym "@module.builtin"               { sym "@module" },
 			sym "@label"                        { Statement },
 
-			sym "@string"                       { String },
+			sym "@string"                       { Constant },
 			sym "@string.documentation"         { sym "@string" },
 			sym "@string.regexp"                { Constant },
 			sym "@string.escape"                { Special },
@@ -226,7 +237,7 @@ local function generate(p, opt)
 			sym "@character"                    { Constant },
 			sym "@character.special"            { Special },
 
-			sym "@boolean"                      { Boolean },
+			sym "@boolean"                      { Number },
 			sym "@number"                       { Number },
 			sym "@number.float"                 { sym "@number" },
 
@@ -298,9 +309,9 @@ local function generate(p, opt)
 			sym "@markup.list.checked"          { sym "@markup.list" },
 			sym "@markup.list.unchecked"        { sym "@markup.list" },
 
-			sym "@diff.plus"                    { DiffAdd },
-			sym "@diff.minus"                   { DiffDelete },
-			sym "@diff.delta"                   { DiffChange },
+			sym "@diff.plus"                    { fg = p.leaf },
+			sym "@diff.minus"                   { fg = p.rose },
+			sym "@diff.delta"                   { fg = p.water },
 
 			sym "@tag"                          { Special },
 			sym "@tag.attribute"                { sym "@property" },
@@ -320,8 +331,6 @@ local function generate(p, opt)
 			sym "@markup.raw.block.vimdoc"      { fg = 'NONE' },
 			sym "@variable.parameter.vimdoc"    { Type },
 			sym "@label.vimdoc"                 { Type, gui = "bold" },
-
-			sym "@constructor.lua"                  { Delimiter },
 
 			-- LSP Semantic Token Groups
 			sym "@lsp.type.boolean"                       { sym "@boolean" },
@@ -367,9 +376,9 @@ local function generate(p, opt)
 			sym "@lsp.typemod.variable.static"            { sym "@constant" },
 
 			-- Syntax
-			diffAdded                 { DiffAdd },
-			diffRemoved               { DiffDelete },
-			diffChanged               { DiffChange },
+			diffAdded                 { fg = p.leaf },
+			diffRemoved               { fg = p.rose },
+			diffChanged               { fg = p.water },
 			diffOldFile               { fg = p.rose, gui = "italic" },
 			diffNewFile               { fg = p.leaf, gui = "italic" },
 			diffFile                  { fg = p.wood, gui = "bold" },
@@ -399,10 +408,6 @@ local function generate(p, opt)
 
 			IblIndent                        { fg = p1.bg.li(8).de(22) },
 			IblScope                         { fg = p1.bg.li(22).de(22) },
-			IndentLine                       { IblIndent },
-			IndentLineCurrent                { IblScope },
-			SnacksIndent                     { fg = p1.bg.li(8).de(22) },
-			SnacksIndentScope                { fg = p1.bg.li(22).de(22) },
 
 			TelescopeSelection               { CursorLine },
 			TelescopeSelectionCaret          { TelescopeSelection, fg = p.rose },
@@ -420,17 +425,15 @@ local function generate(p, opt)
 			FzfLuaTabTitle                   { fg = p.sky },
 			FzfLuaTabMarker                  { fg = p.leaf },
 			FzfLuaLiveSym                    { fg = p.wood },
-			FzfLuaTitle                      { Title },
-			FzfLuaFzfCursorLine              { CursorLine },
-			FzfLuaFzfMatch                   { fb = p.blossom, gui = "bold" },
 
 			Sneak                            { Search },
 			SneakLabel                       { WildMenu },
 			SneakLabelMask                   { bg = p.blossom, fg = p.blossom },
 
 			LeapMatch                        { gui = "bold,underline,nocombine" },
-			LeapBackdrop                     { gui = "nocombine", fg = p.bg.lightness(p.bg.l + 20) },
-			LeapLabel                        { fg = p.blossom.lightness(p1.bg.l + 56).sa(80), gui = "bold" },
+			LeapLabelPrimary                 { Search , gui = "bold,nocombine" },
+			LeapLabelSecondary               { DiffText, gui = "bold,nocombine" },
+			LeapLabelSelected                { IncSearch },
 
 			HopNextKey                       { fg = p.blossom, gui = "bold,underline" },
 			HopNextKey1                      { fg = p.sky, gui = "bold,underline" },
@@ -495,11 +498,6 @@ local function generate(p, opt)
 			CmpItemKind                      { fg = p1.fg4 },
 			CmpItemMenu                      { fg = p1.fg5 },
 
-			BlinkCmpLabelDetail              { Type },
-			BlinkCmpLabelDescription         { Type },
-			BlinkCmpSource                   { Type },
-			BlinkCmpKind                     { fg = p1.fg4 },
-
 			NnnNormal                        { NvimTreeNormal },
 			NnnNormalNC                      { NnnNormal },
 			NnnWinSeparator                  { NvimTreeWinSeparator },
@@ -538,8 +536,6 @@ local function generate(p, opt)
 			NotifyDEBUGTitle                 { DiagnosticHint },
 			NotifyTRACEIcon                  { DiagnosticHint },
 			NotifyTRACETitle                 { DiagnosticHint },
-
-			RenderMarkdownCode { bg = LspInlayHint.bg },
 		}
 	end)
 	-- stylua: ignore end

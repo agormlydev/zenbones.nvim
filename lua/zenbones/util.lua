@@ -56,14 +56,21 @@ function M.palette_extend(p, base_bg)
 	local hsluv = lush.hsluv
 	if base_bg == "light" then
 		p = vim.tbl_extend("keep", p, {
-			bg = hsluv(39, 12, 94), -- sand
+			--bg = hsluv(39, 12, 94), -- sand
+			--AG Custom
+			bg = hsluv(39, 12, 100),
 			fg = hsluv(230, 30, 22), -- stone
 			leaf = hsluv(112, 72, 42),
 			water = hsluv(236, 84, 40),
-			rose = hsluv(4, 70, 40),
+			-- rose = hsluv(4, 70, 40),
+			-- AG Custom
+			rose = hsluv(4, 70, 65),
 			wood = hsluv(26, 80, 40),
 			blossom = hsluv(318, 42, 42),
-			sky = hsluv(204, 80, 53),
+			sky = hsluv(204, 80, 42),
+			indent = hsluv(4, 70, 85),
+			visual = hsluv(204, 80, 96),
+			cursorLine = hsluv(4, 70, 96),
 		})
 		return vim.tbl_extend("keep", p, {
 			bg1 = p.bg.sa(4).da(16),
@@ -80,9 +87,15 @@ function M.palette_extend(p, base_bg)
 	elseif base_bg == "dark" then
 		-- default
 		p = vim.tbl_extend("keep", p, {
-			bg = hsluv(39, 12, 9), -- sand
-			fg = hsluv(230, 10, 76), -- stone
-			rose = hsluv(6, 62, 60),
+			-- bg = hsluv(39, 12, 9), -- sand
+			-- AG Custom
+			bg = hsluv(39, 12, 0), -- sand
+			-- fg = hsluv(230, 10, 76), -- stone
+			-- AG Custom
+			fg = hsluv(230, 10, 98), -- stone
+			-- rose = hsluv(6, 62, 60),
+			-- AG Custom
+			rose = hsluv(4, 70, 82),
 			leaf = hsluv(111, 47, 61),
 			wood = hsluv(32, 47, 58),
 			water = hsluv(236, 64, 61),
